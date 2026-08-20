@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Планы на субботу</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            margin: 0;
+            overflow: hidden; /* Чтобы кнопка не убегала за пределы экрана */
+        }
+        .container {
+            text-align: center;
+            background: white;
+            padding: 50px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            position: relative;
+        }
+        h1 {
+            margin-bottom: 30px;
+            color: #333;
+        }
+        .buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            min-height: 50px; /* Чтобы контейнер не схлопывался */
+        }
+        button {
+            padding: 15px 30px;
+            font-size: 18px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.1s;
+        }
+        #yesBtn {
+            background-color: #4CAF50;
+            color: white;
+        }
+        #yesBtn:hover {
+            background-color: #45a049;
+        }
+        #noBtn {
+            background-color: #f44336;
+            color: white;
+            position: absolute; /* Для убегания */
+        }
+        #noBtn:hover {
+            background-color: #d32f2f;
+        }
+        #imageContainer {
+            display: none;
+            margin-top: 30px;
+        }
+        #imageContainer img {
+            max-width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+    }
+    </style>
+</head>
+<body>
+
+<div class="container" id="mainContainer">
+    <h1>Кто бухать в субботу?</h1>
+    <div class="buttons">
+        <button id="yesBtn">Я</button>
+        <!-- Кнопку "Не я" разместим абсолютно, чтобы она могла убегать -->
+        <button id="noBtn">Не я</button>
+    </div>
+    <div id="imageContainer">
+        <img id="resultImage" src="" alt="Результат">
+    </div>
+</div>
+
+<script>
+    const noBtn = document.getElementById('noBtn');
+    const yesBtn = document.getElementById('yesBtn');
+    const imageContainer = document.getElementById('imageContainer');
+    const resultImage = document.getElementById('resultImage');
+    const mainContainer = document.getElementById('mainContainer');
+
+    // Функция, заставляющая кнопку убегать
+    function moveButton() {
+        const containerRect = mainContainer.getBoundingClientRect();
+        const btnRect = noBtn.getBoundingClientRect();
+
+        // Рассчитываем случайные координаты внутри контейнера, учитывая размер кнопки
+        const maxX = containerRect.width - btnRect.width - 20; // 20px отступ от края
+        const maxY = containerRect.height - btnRect.height - 20;
+
+        const randomX = Math.random() * maxX;
+        const randomY = Math.random() * maxY;
+
+        noBtn.style.left = `${randomX}px`;
+        noBtn.style.top = `${randomY}px`;
+    }
+
+    // При наведении курсора на кнопку "Не я", она убегает
+    noBtn.addEventListener('mouseover', moveButton);
+    // На всякий случай для тач-скринов
+    noBtn.addEventListener('touchstart', (e) => {
+        e.preventDefault(); // Предотвращаем клик
+        moveButton();
+    });
+
+    // Обработка нажатия на кнопку "Я"
+    yesBtn.addEventListener('click', function() {
+        // Указываем путь к картинке
+        // ВАЖНО: Картинка image_0.png должна лежать в той же папке!
+        resultImage.src = 'image_0.png';
+        
+        // Показываем контейнер с картинкой
+        imageContainer.style.display = 'block';
+        
+        // Скрываем кнопки
+        document.querySelector('.buttons').style.display = 'none';
+        
+        // По желанию: убираем обработчик убегания
+        noBtn.removeEventListener('mouseover', moveButton);
+        noBtn.style.position = 'static'; // Возвращаем в поток
+        noBtn.style.display = 'none'; // И вообще скрываем
+    });
+</script>
+
+</body>
+</html>
