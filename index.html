@@ -3,209 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Важный вопрос</title>
+    <title>Суббота</title>
     <style>
-        * {
-            box-sizing: border-box;
+        body {
             margin: 0;
             padding: 0;
-        }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            overflow: hidden;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            font-family: sans-serif;
         }
         .card {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 40px 30px;
+            background: white;
+            padding: 30px;
             border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
             text-align: center;
-            max-width: 400px;
             width: 90%;
-            position: relative;
+            max-width: 350px;
         }
-        h1 {
-            color: #2d3748;
-            font-size: 26px;
-            margin-bottom: 30px;
-            font-weight: 700;
-        }
-        .buttons-wrapper {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 20px;
-            min-height: 60px;
-            position: relative;
-        }
+        h1 { margin-bottom: 25px; font-size: 24px; color: #333; }
+        .btn-box { display: flex; justify-content: center; gap: 20px; height: 50px; }
         button {
-            padding: 14px 28px;
+            padding: 10px 20px;
             font-size: 18px;
-            font-weight: 600;
             border: none;
-            border-radius: 12px;
+            border-radius: 8px;
             cursor: pointer;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            transition: 0.3s;
         }
-        #yesBtn {
-            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
-            color: white;
-            box-shadow: 0 4px 14px rgba(72, 187, 120, 0.4);
-        }
-        #yesBtn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(72, 187, 120, 0.6);
-        }
-        #noBtn {
-            background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
-            color: white;
-            box-shadow: 0 4px 14px rgba(245, 101, 101, 0.4);
-            position: relative; /* Изначально стоит в потоке рядом с "Я" */
-            transition: all 0.2s ease-out;
-        }
-        #imageContainer {
-            display: none;
-            margin-top: 20px;
-            animation: fadeIn 0.5s ease-in-out;
-        }
-        #imageContainer img {
-            width: 100%;
-            border-radius: 12px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
-        }
+        #yesBtn { background: #4CAF50; color: white; }
+        #noBtn { background: #f44336; color: white; }
+        #resultImg { width: 100%; margin-top: 20px; display: none; border-radius: 10px; }
     </style>
 </head>
 <body>
 
-<div class="card" id="card">
-    <h1 id="questionTitle">Кто бухать в субботу?</h1>
-    <div class="buttons-wrapper" id="btnWrapper">
+<div class="card">
+    <h1 id="qText">Кто бухать в субботу?</h1>
+    <div class="btn-box" id="btns">
         <button id="yesBtn">Я</button>
         <button id="noBtn">Не я</button>
     </div>
-    <div id="imageContainer">
-        <img id="resultImage" src="" alt="Результат">
-    </div>
+    <img id="resultImg" src="image_0.png" alt="Результат">
 </div>
 
 <script>
     const noBtn = document.getElementById('noBtn');
     const yesBtn = document.getElementById('yesBtn');
-    const card = document.getElementById('card');
-    const imageContainer = document.getElementById('imageContainer');
-    const resultImage = document.getElementById('resultImage');
-    const btnWrapper = document.getElementById('btnWrapper');
+    const img = document.getElementById('resultImg');
+    const btns = document.getElementById('btns');
+    const qText = document.getElementById('qText');
 
-    let isAbsolute = false;
-
-    function moveButton() {
-        if (!isAbsolute) {
-            // Переключаем в абсолютное позиционирование только при первом наведении
-            noBtn.style.position = 'fixed';
-            isAbsolute = true;
-        }
-
-        // Ограничиваем область бегания границами экрана
-        const padding = 20;
-        const maxX = window.innerWidth - noBtn.offsetWidth - padding;
-        const maxY = window.innerHeight - noBtn.offsetHeight - padding;
-
-        const randomX = Math.max(padding, Math.floor(Math.random() * maxX));
-        const randomY = Math.max(padding, Math.floor(Math.random() * maxY));
-
-        noBtn.style.left = `${randomX}px`;
-        noBtn.style.top = `${randomY}px`;
+    function move() {
+        noBtn.style.position = 'fixed';
+        const x = Math.random() * (window.innerWidth - 80);
+        const y = Math.random() * (window.innerHeight - 50);
+        noBtn.style.left = x + 'px';
+        noBtn.style.top = y + 'px';
     }
 
-    noBtn.addEventListener('mouseover', moveButton);
-    noBtn.addEventListener('touchstart', (e) => {
-        e.preventDefault();
-        moveButton();
-    });
+    noBtn.addEventListener('mouseover', move);
+    noBtn.addEventListener('touchstart', move);
 
-    yesBtn.addEventListener('click', function() {
-        resultImage.src = 'image_0.png';
-        imageContainer.style.display = 'block';
-        btnWrapper.style.display = 'none';
-        noBtn.style.display = 'none';
+    yesBtn.addEventListener('click', () => {
+        btns.style.display = 'none';
+        qText.innerText = "Правильный выбор!";
+        img.style.display = 'block';
     });
 </script>
 
 </body>
 </html>
-</head>
-<body>
 
-<div class="container" id="mainContainer">
-    <h1>Кто бухать в субботу?</h1>
-    <div class="buttons">
-        <button id="yesBtn">Я</button>
-        <!-- Кнопку "Не я" разместим абсолютно, чтобы она могла убегать -->
-        <button id="noBtn">Не я</button>
-    </div>
-    <div id="imageContainer">
-        <img id="resultImage" src="" alt="Результат">
-    </div>
-</div>
-
-<script>
-    const noBtn = document.getElementById('noBtn');
-    const yesBtn = document.getElementById('yesBtn');
-    const imageContainer = document.getElementById('imageContainer');
-    const resultImage = document.getElementById('resultImage');
-    const mainContainer = document.getElementById('mainContainer');
-
-    // Функция, заставляющая кнопку убегать
-    function moveButton() {
-        const containerRect = mainContainer.getBoundingClientRect();
-        const btnRect = noBtn.getBoundingClientRect();
-
-        // Рассчитываем случайные координаты внутри контейнера, учитывая размер кнопки
-        const maxX = containerRect.width - btnRect.width - 20; // 20px отступ от края
-        const maxY = containerRect.height - btnRect.height - 20;
-
-        const randomX = Math.random() * maxX;
-        const randomY = Math.random() * maxY;
-
-        noBtn.style.left = `${randomX}px`;
-        noBtn.style.top = `${randomY}px`;
-    }
-
-    // При наведении курсора на кнопку "Не я", она убегает
-    noBtn.addEventListener('mouseover', moveButton);
-    // На всякий случай для тач-скринов
-    noBtn.addEventListener('touchstart', (e) => {
-        e.preventDefault(); // Предотвращаем клик
-        moveButton();
-    });
-
-    // Обработка нажатия на кнопку "Я"
-    yesBtn.addEventListener('click', function() {
-        // Указываем путь к картинке
-        // ВАЖНО: Картинка image_0.png должна лежать в той же папке!
-        resultImage.src = 'image_0.png';
-        
-        // Показываем контейнер с картинкой
-        imageContainer.style.display = 'block';
-        
-        // Скрываем кнопки
-        document.querySelector('.buttons').style.display = 'none';
-        
-        // По желанию: убираем обработчик убегания
-        noBtn.removeEventListener('mouseover', moveButton);
-        noBtn.style.position = 'static'; // Возвращаем в поток
-        noBtn.style.display = 'none'; // И вообще скрываем
-    });
-</script>
-
-</body>
-</html>
