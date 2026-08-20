@@ -3,70 +3,145 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Планы на субботу</title>
+    <title>Важный вопрос</title>
     <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            background-color: #f0f0f0;
-            margin: 0;
-            overflow: hidden; /* Чтобы кнопка не убегала за пределы экрана */
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            overflow: hidden;
         }
-        .container {
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px 30px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
             text-align: center;
-            background: white;
-            padding: 50px;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            max-width: 400px;
+            width: 90%;
             position: relative;
         }
         h1 {
+            color: #2d3748;
+            font-size: 26px;
             margin-bottom: 30px;
-            color: #333;
+            font-weight: 700;
         }
-        .buttons {
+        .buttons-wrapper {
             display: flex;
-            gap: 20px;
             justify-content: center;
-            min-height: 50px; /* Чтобы контейнер не схлопывался */
+            align-items: center;
+            gap: 20px;
+            min-height: 60px;
+            position: relative;
         }
         button {
-            padding: 15px 30px;
+            padding: 14px 28px;
             font-size: 18px;
+            font-weight: 600;
             border: none;
-            border-radius: 5px;
+            border-radius: 12px;
             cursor: pointer;
-            transition: background-color 0.3s, transform 0.1s;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
         #yesBtn {
-            background-color: #4CAF50;
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
             color: white;
+            box-shadow: 0 4px 14px rgba(72, 187, 120, 0.4);
         }
         #yesBtn:hover {
-            background-color: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(72, 187, 120, 0.6);
         }
         #noBtn {
-            background-color: #f44336;
+            background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
             color: white;
-            position: absolute; /* Для убегания */
-        }
-        #noBtn:hover {
-            background-color: #d32f2f;
+            box-shadow: 0 4px 14px rgba(245, 101, 101, 0.4);
+            position: relative; /* Изначально стоит в потоке рядом с "Я" */
+            transition: all 0.2s ease-out;
         }
         #imageContainer {
             display: none;
-            margin-top: 30px;
+            margin-top: 20px;
+            animation: fadeIn 0.5s ease-in-out;
         }
         #imageContainer img {
-            max-width: 100%;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
         }
-    }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
     </style>
+</head>
+<body>
+
+<div class="card" id="card">
+    <h1 id="questionTitle">Кто бухать в субботу?</h1>
+    <div class="buttons-wrapper" id="btnWrapper">
+        <button id="yesBtn">Я</button>
+        <button id="noBtn">Не я</button>
+    </div>
+    <div id="imageContainer">
+        <img id="resultImage" src="" alt="Результат">
+    </div>
+</div>
+
+<script>
+    const noBtn = document.getElementById('noBtn');
+    const yesBtn = document.getElementById('yesBtn');
+    const card = document.getElementById('card');
+    const imageContainer = document.getElementById('imageContainer');
+    const resultImage = document.getElementById('resultImage');
+    const btnWrapper = document.getElementById('btnWrapper');
+
+    let isAbsolute = false;
+
+    function moveButton() {
+        if (!isAbsolute) {
+            // Переключаем в абсолютное позиционирование только при первом наведении
+            noBtn.style.position = 'fixed';
+            isAbsolute = true;
+        }
+
+        // Ограничиваем область бегания границами экрана
+        const padding = 20;
+        const maxX = window.innerWidth - noBtn.offsetWidth - padding;
+        const maxY = window.innerHeight - noBtn.offsetHeight - padding;
+
+        const randomX = Math.max(padding, Math.floor(Math.random() * maxX));
+        const randomY = Math.max(padding, Math.floor(Math.random() * maxY));
+
+        noBtn.style.left = `${randomX}px`;
+        noBtn.style.top = `${randomY}px`;
+    }
+
+    noBtn.addEventListener('mouseover', moveButton);
+    noBtn.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        moveButton();
+    });
+
+    yesBtn.addEventListener('click', function() {
+        resultImage.src = 'image_0.png';
+        imageContainer.style.display = 'block';
+        btnWrapper.style.display = 'none';
+        noBtn.style.display = 'none';
+    });
+</script>
+
+</body>
+</html>
 </head>
 <body>
 
